@@ -1,23 +1,24 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function VideoDetailsScreen() {
+export default function ErrorComponent({ message }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Video Details Screen</Text>
+      <Text style={styles.errorText}>{message || 'Something went wrong!'}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    padding: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f8f9fa',
   },
-  text: {
-    fontSize: 24,
+  errorText: {
+    color: 'red',
+    fontSize: 16,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
