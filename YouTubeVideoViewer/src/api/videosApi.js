@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_KEY = 'asdsad'; 
+const API_KEY = 'AIzaSyB4cLJ6cxgQzR1JCa3yPjKoKY-7zDW4lmY';  // Replace with your actual API key
 const BASE_URL = 'https://www.googleapis.com/youtube/v3/search';
 
 export const fetchVideos = async (query) => {
@@ -15,13 +15,15 @@ export const fetchVideos = async (query) => {
           key: API_KEY,
         },
       });
-  
+      
       return response.data.items.map((item) => ({
-        id: item.id.videoId,
-        title: item.snippet.title,
-        channel: item.snippet.channelTitle,
-        thumbnail: item.snippet.thumbnails.medium.url,
+        id: item.id.videoId || item.id, // Ensure the ID is correctly extracted
+        title: item.snippet?.title || 'No title available', 
+        channel: item.snippet?.channelTitle || 'Unknown channel', 
+        thumbnail: item.snippet?.thumbnails?.medium?.url || '', 
+        description: item.snippet?.description || 'No description available', 
       }));
+      
     } catch (error) {
       console.error('Error fetching videos:', error);
       throw new Error('Failed to fetch videos. Please try again.');
