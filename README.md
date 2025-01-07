@@ -137,5 +137,3 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 Happy coding! 🚀
 ```
-
-You can update the placeholder sections such as the repository link and API key details based on your specific project setup. Let me know if you need further adjustments! 😊
