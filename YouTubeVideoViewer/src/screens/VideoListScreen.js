@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { View, FlatList, StyleSheet, Text } from 'react-native';
-import VideoCard from '../components/VideoCard'; 
-import LoadingScreen from './LoadingScreen'; 
-import ErrorScreen from './ErrorScreen'; 
-import SearchBar from '../components/SearchBar'; 
-import { useFetchVideos } from '../hooks/useFetchVideos'; 
+import { View, FlatList, StyleSheet, Text, Alert } from 'react-native';
+import VideoCard from '../components/VideoCard';
+import LoadingScreen from './LoadingScreen';
+import ErrorScreen from './ErrorScreen';
+import SearchBar from '../components/SearchBar';
+import { useFetchVideos } from '../hooks/useFetchVideos';
 
 export default function VideoListScreen({ navigation }) {
   // State for managing the search query
@@ -13,14 +13,25 @@ export default function VideoListScreen({ navigation }) {
   // Hook for fetching videos and managing loading/error states
   const { videos, loading, error, fetchVideos } = useFetchVideos();
 
-  // If videos are still loading, display the LoadingScreen component
+  // Function to handle errors more gracefully
+  const handleError = (error) => {
+    console.error('Error fetching videos:', error); // Log the error for debugging
+    Alert.alert(
+      'Error',
+      'An unexpected error occurred while fetching videos. Please try again later.',
+      [{ text: 'OK' }]
+    );
+  };
+
+  // Handle loading state
   if (loading) {
     console.log('LoadingScreen displayed'); // Log to confirm loading state
     return <LoadingScreen />;
   }
 
-  // If there's an error, display the ErrorScreen component
+  // Handle error state
   if (error) {
+    handleError(error); // Call the error handler function
     return <ErrorScreen message={error} />;
   }
 
@@ -30,7 +41,13 @@ export default function VideoListScreen({ navigation }) {
       <SearchBar
         query={query} // Current search query
         setQuery={setQuery} // Function to update the search query
-        onSearch={() => fetchVideos(query)} // Fetch videos when the user submits a query
+        onSearch={() => {
+          try {
+            fetchVideos(query); // Fetch videos when the user submits a query
+          } catch (err) {
+            handleError(err); // Handle any errors that occur during the fetch
+          }
+        }}
       />
 
       {/* Video List */}
