@@ -1,25 +1,26 @@
-import { useState, useEffect } from 'react';
-import { fetchVideos } from '../api/videosApi'; 
+import { useState } from 'react';
+import { fetchVideos } from '../api/videosApi'; // Import the fetchVideos function from your API module
 
 export const useFetchVideos = () => {
-  const [videos, setVideos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [videos, setVideos] = useState([]);  // State to hold the fetched videos
+  const [loading, setLoading] = useState(false); // State to manage loading state
+  const [error, setError] = useState(null); // State to manage error messages
 
-  useEffect(() => {
-    const getVideos = async () => {
-      try {
-        const data = await fetchVideos();
-        setVideos(data); 
-      } catch (err) {
-        setError('Failed to fetch videos'); 
-      } finally {
-        setLoading(false); 
-      }
-    };
+  
+  const fetchVideosWithQuery = async (query) => {
+    setLoading(true); 
+    setError(null); 
+    try {
+      const data = await fetchVideos(query); 
+      setVideos(data); 
+    } catch (err) {
+      console.error('Error fetching videos:', err);
+      setError('Failed to fetch videos'); 
+    } finally {
+      setLoading(false); 
+    }
+  };
 
-    getVideos();
-  }, []);
-
-  return { videos, loading, error };
+  
+  return { videos, loading, error, fetchVideos: fetchVideosWithQuery }; // Return the state and the function to fetch videos
 };
